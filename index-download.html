@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De la Plume au Studio — Camp d'Écriture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #0e0c0a;
+    --cream: #f5f0e8;
+    --warm: #c8a96e;
+    --rust: #b85c3a;
+    --sage: #6b7c5e;
+    --fog: #d4cfc7;
+    --deep: #1a1612;
+    --paper: #ede8de;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.5rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(to bottom, rgba(14,12,10,0.9), transparent);
+    backdrop-filter: blur(4px);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.15em;
+    color: var(--warm);
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--fog); text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--warm); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 10rem 5rem 6rem 5rem;
+    position: relative; z-index: 2;
+  }
+
+  .hero-tag {
+    font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--warm); margin-bottom: 2.5rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-tag::before {
+    content: ''; display: block; width: 40px; height: 1px; background: var(--warm);
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    line-height: 1.05;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--warm);
+    display: block;
+  }
+  .hero-title span {
+    color: var(--cream);
+    display: block;
+  }
+
+  .hero-subtitle {
+    font-size: 0.82rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--sage); margin-top: 1.5rem; margin-bottom: 3rem;
+  }
+
+  .hero-poem {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    line-height: 2;
+    font-style: italic;
+    color: var(--fog);
+    border-left: 2px solid var(--warm);
+    padding-left: 1.5rem;
+    max-width: 420px;
+    margin-bottom: 3.5rem;
+    opacity: 0.85;
+  }
+
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 1rem;
+    background: var(--warm);
+    color: var(--ink);
+    padding: 1rem 2.5rem;
+    font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s;
+    width: fit-content;
+  }
+  .hero-cta:hover {
+    background: var(--cream);
+    transform: translateX(6px);
+  }
+  .hero-cta .arrow { font-size: 1.2rem; }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-right img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: sepia(20%) contrast(1.05);
+    transform: scale(1.05);
+    animation: subtle-zoom 20s ease infinite alternate;
+  }
+  @keyframes subtle-zoom {
+    from { transform: scale(1.05); }
+    to { transform: scale(1.12); }
+  }
+  .hero-right::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, var(--ink) 0%, transparent 30%),
+                linear-gradient(to top, var(--ink) 0%, transparent 40%);
+  }
+
+  .hero-date-badge {
+    position: absolute; bottom: 3rem; right: 3rem; z-index: 10;
+    background: var(--rust);
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .hero-date-badge .date-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem; line-height: 1;
+    color: var(--cream);
+    display: block;
+  }
+  .hero-date-badge .date-small {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(245,240,232,0.7);
+    display: block; margin-top: 0.3rem;
+  }
+
+  /* ── INTRO POEM ── */
+  #poem {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 8rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  #poem::before {
+    content: '♪';
+    position: absolute; right: 8%; top: 10%;
+    font-size: 20rem; opacity: 0.04;
+    font-family: serif;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .poem-inner {
+    max-width: 780px; margin: 0 auto; padding: 0 4rem;
+    position: relative; z-index: 1;
+  }
+  .poem-eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--rust); margin-bottom: 3rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .poem-eyebrow::after {
+    content: ''; flex: 1; height: 1px; background: var(--rust); opacity: 0.4;
+  }
+
+  .poem-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    line-height: 1.75;
+    font-weight: 400;
+  }
+  .poem-text strong {
+    font-weight: 700; color: var(--rust);
+  }
+  .poem-text em {
+    font-style: italic;
+  }
+
+  .poem-close {
+    margin-top: 3rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-style: italic;
+    font-weight: 700;
+    color: var(--rust);
+  }
+
+  /* ── INFOS PRATIQUES ── */
+  #infos {
+    background: var(--deep);
+    padding: 8rem 5rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    letter-spacing: 0.08em;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+  .section-title span { color: var(--warm); }
+
+  .section-sub {
+    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--sage); margin-bottom: 4rem;
+  }
+
+  .infos-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+    margin-top: 4rem;
+  }
+  .info-card {
+    background: rgba(245,240,232,0.04);
+    padding: 2.5rem 2rem;
+    border-top: 2px solid transparent;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .info-card:hover {
+    background: rgba(200,169,110,0.08);
+    border-top-color: var(--warm);
+  }
+  .info-icon {
+    font-size: 1.8rem; margin-bottom: 1.5rem; display: block;
+  }
+  .info-label {
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--warm); margin-bottom: 0.8rem;
+  }
+  .info-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700; color: var(--cream);
+    line-height: 1.3; margin-bottom: 0.8rem;
+  }
+  .info-desc {
+    font-size: 0.82rem; color: var(--fog); line-height: 1.6; opacity: 0.75;
+  }
+
+  /* ── PROGRAMME ── */
+  #programme {
+    background: var(--cream);
+    color: var(--ink);
+    padding: 8rem 5rem;
+  }
+  #programme .section-title { color: var(--ink); }
+
+  .programme-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    margin-top: 5rem;
+    align-items: start;
+  }
+
+  .programme-list { display: flex; flex-direction: column; gap: 0; }
+
+  .prog-item {
+    display: flex; gap: 2rem; align-items: flex-start;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(14,12,10,0.1);
+    cursor: default;
+    transition: all 0.2s;
+  }
+  .prog-item:hover { padding-left: 1rem; }
+
+  .prog-num {
+    font-size: 2rem;
+    line-height: 1; min-width: 3rem;
+    transition: transform 0.2s;
+  }
+  .prog-item:hover .prog-num { transform: scale(1.2); }
+
+  .prog-content {}
+  .prog-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .prog-desc {
+    font-size: 0.85rem; line-height: 1.65; opacity: 0.65;
+  }
+
+  .programme-right { position: sticky; top: 8rem; }
+
+  .options-box {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 3rem;
+    margin-bottom: 2rem;
+  }
+  .options-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem; letter-spacing: 0.1em;
+    color: var(--warm); margin-bottom: 2rem;
+  }
+  .option-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+  .option-dot {
+    width: 6px; height: 6px;
+    background: var(--warm);
+    border-radius: 50%; margin-top: 0.5rem; flex-shrink: 0;
+  }
+  .option-text { font-size: 0.85rem; line-height: 1.7; color: var(--fog); }
+
+  .detente-box {
+    background: var(--paper);
+    padding: 3rem;
+  }
+  .detente-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; letter-spacing: 0.1em;
+    color: var(--rust); margin-bottom: 1.5rem;
+  }
+  .detente-items {
+    display: flex; flex-wrap: wrap; gap: 0.6rem;
+  }
+  .detente-tag {
+    font-size: 0.72rem; letter-spacing: 0.1em;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--rust);
+    color: var(--rust);
+  }
+
+  /* ── GALERIE ── */
+  #galerie {
+    background: var(--ink);
+    padding: 8rem 5rem;
+  }
+
+  .galerie-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    gap: 6px;
+    margin-top: 4rem;
+  }
+  .gal-item {
+    overflow: hidden; position: relative;
+    background: #1a1612;
+  }
+  .gal-item.tall { grid-row: span 2; }
+  .gal-item.wide { grid-column: span 2; }
+
+  .gal-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(20%) contrast(1.05);
+    transition: all 0.6s ease;
+    min-height: 280px;
+  }
+  .gal-item:hover img {
+    transform: scale(1.06);
+    filter: grayscale(0%) contrast(1.1);
+  }
+  .gal-item::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(14,12,10,0.5), transparent);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .gal-item:hover::after { opacity: 1; }
+
+  /* ── ANIMATEURS ── */
+  #animateurs {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 8rem 5rem;
+  }
+  #animateurs .section-title { color: var(--ink); }
+
+  .animateurs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 5rem;
+  }
+  .animateur-card {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+  .animateur-photo {
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    position: relative;
+  }
+  .animateur-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    filter: grayscale(30%);
+    transition: filter 0.4s;
+  }
+  .animateur-card:hover .animateur-photo img { filter: grayscale(0%); }
+  .animateur-photo::before {
+    content: '';
+    position: absolute; inset: 0;
+    border: 2px solid var(--warm);
+    transform: translate(8px, 8px);
+    z-index: 0; pointer-events: none;
+  }
+
+  .animateur-info {}
+  .animateur-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-weight: 900;
+    margin-bottom: 0.3rem;
+  }
+  .animateur-role {
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--rust); margin-bottom: 1.5rem;
+  }
+  .animateur-bio {
+    font-size: 0.88rem; line-height: 1.8; opacity: 0.75;
+  }
+  .animateur-note {
+    margin-top: 4rem;
+    background: var(--ink);
+    color: var(--fog);
+    padding: 2rem 2.5rem;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    font-style: italic;
+    border-left: 3px solid var(--warm);
+  }
+
+  /* ── TARIF ── */
+  #tarif {
+    background: var(--rust);
+    padding: 7rem 5rem;
+    display: flex; align-items: center; gap: 8rem;
+    position: relative; overflow: hidden;
+  }
+  #tarif::before {
+    content: '600';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30rem; opacity: 0.06;
+    position: absolute; right: -2%; top: 50%;
+    transform: translateY(-50%);
+    color: var(--cream); line-height: 1;
+  }
+
+  .tarif-left { flex: 1; position: relative; z-index: 1; }
+  .tarif-label {
+    font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: rgba(245,240,232,0.6); margin-bottom: 1rem;
+  }
+  .tarif-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 7rem; line-height: 1; color: var(--cream);
+  }
+  .tarif-currency {
+    font-size: 2rem; vertical-align: super;
+  }
+  .tarif-includes {
+    margin-top: 2rem;
+    display: flex; flex-direction: column; gap: 0.7rem;
+  }
+  .tarif-includes li {
+    font-size: 0.85rem; list-style: none;
+    display: flex; gap: 0.8rem; align-items: center;
+    color: rgba(245,240,232,0.85);
+  }
+  .tarif-includes li::before {
+    content: '✓'; color: var(--cream); font-weight: 700;
+  }
+
+  .tarif-right { flex: 1; position: relative; z-index: 1; }
+  .tarif-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem; font-style: italic; font-weight: 700;
+    color: var(--cream); line-height: 1.2; margin-bottom: 1.5rem;
+  }
+  .tarif-desc {
+    font-size: 0.9rem; line-height: 1.8;
+    color: rgba(245,240,232,0.8); margin-bottom: 2rem;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--deep);
+    padding: 8rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 8rem;
+    align-items: center;
+  }
+
+  .contact-left {}
+  .contact-intro {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    line-height: 1.3; font-style: italic;
+    color: var(--cream); margin-bottom: 2rem;
+  }
+  .contact-intro strong { font-style: normal; color: var(--warm); }
+  .contact-sub {
+    font-size: 0.85rem; line-height: 1.8; color: var(--fog); opacity: 0.75;
+    margin-bottom: 3rem;
+  }
+  .contact-email {
+    display: flex; align-items: center; gap: 1rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; letter-spacing: 0.1em;
+    color: var(--warm); text-decoration: none;
+    border-bottom: 1px solid var(--warm);
+    padding-bottom: 0.5rem;
+    width: fit-content;
+    transition: all 0.3s;
+  }
+  .contact-email:hover { color: var(--cream); border-color: var(--cream); }
+
+  .contact-right {}
+  .contact-form {
+    display: flex; flex-direction: column; gap: 1.5rem;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-label {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--warm);
+  }
+  .form-input, .form-textarea, .form-select {
+    background: rgba(245,240,232,0.05);
+    border: 1px solid rgba(245,240,232,0.15);
+    color: var(--cream);
+    padding: 0.9rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.3s;
+    width: 100%;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: var(--warm);
+  }
+  .form-textarea { min-height: 120px; resize: vertical; }
+  .form-select option { background: var(--deep); }
+
+  .btn-submit {
+    background: var(--warm);
+    color: var(--ink);
+    border: none; padding: 1.1rem 3rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase;
+    font-weight: 500; cursor: pointer;
+    transition: all 0.3s;
+    align-self: flex-start;
+  }
+  .btn-submit:hover {
+    background: var(--cream);
+    transform: translateX(6px);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    padding: 3rem 5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid rgba(245,240,232,0.08);
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; letter-spacing: 0.15em;
+    color: var(--warm);
+  }
+  .footer-copy {
+    font-size: 0.75rem; color: var(--fog); opacity: 0.4;
+  }
+  .footer-tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-size: 0.9rem;
+    color: var(--fog); opacity: 0.5;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    nav { padding: 1.5rem 2rem; }
+    #hero { grid-template-columns: 1fr; }
+    .hero-right { height: 50vh; }
+    .hero-right::after {
+      background: linear-gradient(to top, var(--ink) 0%, transparent 50%);
+    }
+    .hero-left { padding: 8rem 2rem 4rem; }
+    .infos-grid { grid-template-columns: repeat(2, 1fr); }
+    .programme-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .animateurs-grid { grid-template-columns: 1fr; }
+    .animateur-card { grid-template-columns: 160px 1fr; }
+    #tarif { flex-direction: column; gap: 3rem; padding: 5rem 2rem; }
+    #contact { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 2rem; }
+    #infos, #programme, #galerie, #animateurs { padding: 5rem 2rem; }
+    .galerie-grid { grid-template-columns: repeat(2, 1fr); }
+    .gal-item.wide { grid-column: span 1; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+
+  @media (max-width: 640px) {
+    .infos-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .animateur-card { grid-template-columns: 1fr; }
+    .animateur-photo { max-height: 280px; }
+    .galerie-grid { grid-template-columns: 1fr; }
+    .gal-item.tall { grid-row: span 1; }
+    .nav-links { display: none; }
+    #tarif::before { font-size: 15rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">De la Plume au Studio</div>
+  <ul class="nav-links">
+    <li><a href="#infos">Infos</a></li>
+    <li><a href="#programme">Programme</a></li>
+    <li><a href="#galerie">Le Lieu</a></li>
+    <li><a href="#animateurs">Animateurs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-tag">Camp d'écriture — Août 2026</div>
+    <h1 class="hero-title">
+      <em>De la Plume</em>
+      <span>au Studio</span>
+    </h1>
+    <div class="hero-subtitle">4 jours · Immersion totale · Condroz, Belgique</div>
+    <div class="hero-poem">
+      Combien sommes-nous à avoir griffonné des phrases dans des cahiers,
+      sur des bouts de papier, sur des nappes même ?<br>
+      Ces mots, combien sommes-nous à les avoir ensuite fredonnés
+      pour leur donner une deuxième vie ?
+    </div>
+    <a href="#contact" class="hero-cta">
+      Réserver ma place <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <div class="hero-right">
+    <img src="image044-2.jpg" alt="Gîte de Baya à Ohey">
+    <div class="hero-date-badge">
+      <span class="date-big">24–28</span>
+      <span class="date-small">Août 2026</span>
+    </div>
+  </div>
+</section>
+
+<!-- POEM INTRO -->
+<section id="poem">
+  <div class="poem-inner reveal">
+    <div class="poem-eyebrow">Le projet</div>
+    <p class="poem-text">
+      La matière est là, <strong>chez beaucoup.</strong><br>
+      Il manque le temps, celui qu'on veut prendre et qu'on ne prend pas.<br>
+      Il manque peut-être <em>la confiance</em><br>
+      et un petit éclairage technique.<br>
+      Puis un bel emballage…<br><br>
+      <strong>Combien de chansons en puissance, en attente d'envol ?</strong>
+    </p>
+    <p class="poem-close">Et si on prenait ce temps ensemble… ?</p>
+  </div>
+</section>
+
+<!-- INFOS PRATIQUES -->
+<section id="infos">
+  <div class="reveal">
+    <div class="section-title">Infos <span>Pratiques</span></div>
+    <div class="section-sub">Tout ce qu'il faut savoir</div>
+  </div>
+  <div class="infos-grid">
+    <div class="info-card reveal">
+      <span class="info-icon">📅</span>
+      <div class="info-label">Quand</div>
+      <div class="info-value">24 – 28 Août 2026</div>
+      <div class="info-desc">4 journées complètes en immersion totale dans le Condroz belge.</div>
+    </div>
+    <div class="info-card reveal">
+      <span class="info-icon">🏰</span>
+      <div class="info-label">Où</div>
+      <div class="info-value">Gîte de Baya, Ohey</div>
+      <div class="info-desc">Une maison pleine de charme intégrée dans une ferme-château. 7 chambres, cadre exceptionnel.</div>
+    </div>
+    <div class="info-card reveal">
+      <span class="info-icon">🎵</span>
+      <div class="info-label">Quoi</div>
+      <div class="info-value">Écrire & enregistrer</div>
+      <div class="info-desc">Vous repartez avec une démo enregistrée — voix et instruments — de votre création.</div>
+    </div>
+    <div class="info-card reveal">
+      <span class="info-icon">💶</span>
+      <div class="info-label">Participation</div>
+      <div class="info-value">600 €</div>
+      <div class="info-desc">Logement, repas, toutes les activités musicales et l'enregistrement final inclus.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMME -->
+<section id="programme">
+  <div class="reveal">
+    <div class="section-title">Le <span style="color:var(--rust)">Programme</span></div>
+    <div class="section-sub">Ce qui vous attend</div>
+  </div>
+  <div class="programme-layout">
+    <div class="programme-list">
+      <div class="prog-item reveal">
+        <div class="prog-num">🎵</div>
+        <div class="prog-content">
+          <div class="prog-title">Atelier écriture individuelle</div>
+          <div class="prog-desc">Travaillez votre texte, votre voix intérieure, votre univers propre.</div>
+        </div>
+      </div>
+      <div class="prog-item reveal">
+        <div class="prog-num">🤝</div>
+        <div class="prog-content">
+          <div class="prog-title">Atelier écriture collective</div>
+          <div class="prog-desc">Créez ensemble, échangez les inspirations, enrichissez-vous mutuellement.</div>
+        </div>
+      </div>
+      <div class="prog-item reveal">
+        <div class="prog-num">🎙️</div>
+        <div class="prog-content">
+          <div class="prog-title">Atelier production / studio</div>
+          <div class="prog-desc">Technique micro, posture, déroulement de l'enregistrement, exercices pratiques.</div>
+        </div>
+      </div>
+      <div class="prog-item reveal">
+        <div class="prog-num">🎤</div>
+        <div class="prog-content">
+          <div class="prog-title">Atelier voix</div>
+          <div class="prog-desc">Libérez votre voix, trouvez votre timbre, gagnez en assurance.</div>
+        </div>
+      </div>
+      <div class="prog-item reveal">
+        <div class="prog-num">⏺️</div>
+        <div class="prog-content">
+          <div class="prog-title">Enregistrement final</div>
+          <div class="prog-desc">Chaque participant repart avec la démo de sa chanson — voix et instruments.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="programme-right reveal">
+      <div class="options-box">
+        <div class="options-title">Vos Options</div>
+        <div class="option-item">
+          <div class="option-dot"></div>
+          <div class="option-text">Vous venez avec un texte déjà écrit (terminé ou pas) — on y intègre rythme et mélodie ensemble.</div>
+        </div>
+        <div class="option-item">
+          <div class="option-dot"></div>
+          <div class="option-text">Vous créez un texte sur place avec l'éclairage des animateurs, et on construit la chanson ensemble.</div>
+        </div>
+        <div class="option-item">
+          <div class="option-dot"></div>
+          <div class="option-text">Vous avez déjà une idée assez précise — texte, rythme, mélodie — et on finalise tout avec vous.</div>
+        </div>
+        <div style="margin-top:1.5rem; font-size:0.8rem; color:var(--warm); font-style:italic;">
+          Dans tous les cas, l'objectif est de finaliser une chanson via un enregistrement.
+        </div>
+      </div>
+
+      <div class="detente-box">
+        <div class="detente-title">Activités Détente</div>
+        <div class="detente-items">
+          <span class="detente-tag">Promenades</span>
+          <span class="detente-tag">Karaoké live</span>
+          <span class="detente-tag">Histoire du blues & rock</span>
+          <span class="detente-tag">Blind test</span>
+          <span class="detente-tag">Soirée finale</span>
+          <span class="detente-tag">Atelier Studio</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section id="galerie">
+  <div class="reveal">
+    <div class="section-title">Le <span>Lieu</span></div>
+    <div class="section-sub">Gîte de Baya · Ohey · Condroz</div>
+  </div>
+  <div class="galerie-grid reveal">
+    <div class="gal-item tall">
+      <img src="104869-01-020-sal.jpg" alt="Salon avec cheminée">
+    </div>
+    <div class="gal-item">
+      <img src="104869-01-010-sam.jpg" alt="Salle à manger">
+    </div>
+    <div class="gal-item">
+      <img src="104869-01-062-ch.jpg" alt="Salle de jeux">
+    </div>
+    <div class="gal-item">
+      <img src="104869-01-035-ch.jpg" alt="Chambre">
+    </div>
+    <div class="gal-item">
+      <img src="104869-01-033-ch.jpg" alt="Chambre">
+    </div>
+    <div class="gal-item wide">
+      <img src="image044-2.jpg" alt="Vue extérieure">
+    </div>
+  </div>
+</section>
+
+<!-- ANIMATEURS -->
+<section id="animateurs">
+  <div class="reveal">
+    <div class="section-title" style="color:var(--ink)">Vos <span style="color:var(--rust)">Animateurs</span></div>
+    <div class="section-sub">Les artistes qui vous accompagnent</div>
+  </div>
+  <div class="animateurs-grid">
+    <div class="animateur-card reveal">
+      <div class="animateur-photo">
+        <img src="WhatsApp Image 2026-05-11 at 21.38.11.jpeg" alt="Luc Verbeeren">
+      </div>
+      <div class="animateur-info">
+        <div class="animateur-name">Luc Verbeeren</div>
+        <div class="animateur-role">Auteur · Compositeur · Claviériste</div>
+        <div class="animateur-bio">
+          Auteur-compositeur et claviériste, il a longtemps accompagné des artistes dans l'écriture de chansons, dans le cadre de cours de musique et de spectacles. Il a également donné des cours d'histoire de la musique et composé des génériques TV.
+        </div>
+      </div>
+    </div>
+    <div class="animateur-card reveal">
+      <div class="animateur-photo">
+        <img src="WhatsApp Image 2026-05-11 at 21.41.09.jpeg" alt="Emanuel Vilardi">
+      </div>
+      <div class="animateur-info">
+        <div class="animateur-name">Emanuel Vilardi</div>
+        <div class="animateur-role">Auteur · Compositeur · Producteur · UNIART Production</div>
+        <div class="animateur-bio">
+          Fondateur d'UNIART Production, Emanuel accompagne plusieurs artistes à la création et à la production. Il a collaboré à des dizaines de projets artistiques et apporte son expertise de la scène au studio.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="animateur-note reveal">
+    D'autres intervenants se joindront au camp pour enrichir l'expérience.
+  </div>
+</section>
+
+<!-- TARIF -->
+<section id="tarif">
+  <div class="tarif-left">
+    <div class="tarif-label">Participation aux frais</div>
+    <div class="tarif-price"><span class="tarif-currency">€</span>600</div>
+    <ul class="tarif-includes">
+      <li>Logement 4 nuits au gîte de Baya</li>
+      <li>Tous les repas inclus</li>
+      <li>Toutes les activités musicales</li>
+      <li>Enregistrement final (démo voix + instruments)</li>
+      <li>Activités détente & soirées</li>
+    </ul>
+  </div>
+  <div class="tarif-right">
+    <div class="tarif-title">Une semaine qui change votre rapport à la création</div>
+    <div class="tarif-desc">
+      Vous repartez avec une chanson finalisée, enregistrée, prête à être partagée. Et surtout, avec une nouvelle confiance dans votre pouvoir créatif.
+    </div>
+    <a href="#contact" class="hero-cta">
+      Je veux participer <span class="arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-left reveal">
+    <div class="contact-intro">
+      Prêt à transformer vos mots en <strong>chanson</strong> ?
+    </div>
+    <div class="contact-sub">
+      Dites-nous ce que vous recherchez à travers ce camp d'écriture. Pour toute question sur le déroulement ou le programme en détail, n'hésitez pas à nous écrire.
+    </div>
+    <a href="mailto:uniart.production@hotmail.com" class="contact-email">
+      uniart.production@hotmail.com →
+    </a>
+  </div>
+
+  <div class="contact-right reveal">
+    <div class="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Prénom</label>
+          <input type="text" class="form-input" placeholder="Votre prénom">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nom</label>
+          <input type="text" class="form-input" placeholder="Votre nom">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" placeholder="votre@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ce que je recherche dans ce camp</label>
+        <select class="form-select form-input">
+          <option value="">Choisissez...</option>
+          <option>Finaliser un texte que j'ai déjà</option>
+          <option>Créer ma première chanson de A à Z</option>
+          <option>Apprendre les mécanismes de l'écriture</option>
+          <option>Vivre une expérience créative collective</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Votre message</label>
+        <textarea class="form-textarea" placeholder="Parlez-nous de votre projet, vos envies, vos questions..."></textarea>
+      </div>
+      <button class="btn-submit" onclick="alert('Message envoyé ! Nous reviendrons vers vous très vite.')">
+        Envoyer →
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">De la Plume au Studio</div>
+  <div class="footer-tagline">24–28 Août 2026 · Ohey, Condroz</div>
+  <div class="footer-copy">© 2026 UNIART Production</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => obs.observe(r));
+</script>
+
+</body>
+</html>
